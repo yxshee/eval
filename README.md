@@ -41,3 +41,57 @@ if __name__ == "__main__":
 
     walk = non_repeating_random_walk(graph, start='A')
     print("Random walk (no repeats):", walk)
+
+
+
+import networkx as nx
+import random
+import matplotlib.pyplot as plt
+
+# Create graph
+G = nx.Graph()
+edges = [('a', 'b'), ('a', 'c'), ('c', 'd'), ('d', 'e'), ('e', 'f')]
+G.add_edges_from(edges)
+
+# Draw graph
+nx.draw_networkx(G)
+plt.axis('off')
+plt.show()
+
+def random_walk_no_edge_repeats(G, start_node, wlen):
+    """
+    Perform a random walk of up to length wlen on graph G,
+    never traversing the same edge twice.
+    """
+    current = start_node
+    walk = [start_node]
+    # For undirected graphs, represent edges as frozensets
+    visited_edges = set()
+
+    for _ in range(wlen - 1):
+        # Collect neighbors reachable by unused edges
+        candidates = []
+        for nbr in G.neighbors(current):
+            edge = frozenset({current, nbr})
+            if edge not in visited_edges:
+                candidates.append(nbr)
+
+        if not candidates:
+            # Dead end: no unused edges left
+            break
+
+        # Choose next node at random
+        next_node = random.choice(candidates)
+        # Mark the undirected edge as used
+        visited_edges.add(frozenset({current, next_node}))
+
+        walk.append(next_node)
+        current = next_node
+
+    return walk
+
+# Example usage
+if __name__ == "__main__":
+    path = random_walk_no_edge_repeats(G, start_node='a', wlen=10)
+    print("Random walk (no edge repeats):", path)
+
