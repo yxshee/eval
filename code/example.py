@@ -1,9 +1,9 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from random_walks import random_walk, random_walk_until_target, compute_hitting_time, compute_commute_time
-from mcl import mcl, get_clusters
-from pagerank import pagerank
-from centrality import compute_centralities, print_centrality_measures
+from code.mcl import mcl, get_clusters
+from code.pagerank import pagerank
+from code.centrality import compute_centralities, print_centrality_measures
 
 def example_random_walks():
     """Example of random walk algorithms"""
