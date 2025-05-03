@@ -46,8 +46,8 @@ def random_walk_to_target_no_edge_repeats(
 
 if __name__ == "__main__":
     # --- 1) Build a graph of up to 12 nodes (Erdős–Rényi random graph) ---
-    n = 12
-    p = 0.25  # probability of edge creation
+    n = 13
+    p = 0.69  # probability of edge creation
     G = nx.erdos_renyi_graph(n, p)
     # relabel to strings "n0", "n1", ...
     G = nx.relabel_nodes(G, lambda x: f"n{x}")
