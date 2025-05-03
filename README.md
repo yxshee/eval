@@ -1,6 +1,8 @@
-# Social Networks Random Walk Algorithms
+# Social Networks Algorithms
 
-![Graph Visualization](https://raw.githubusercontent.com/networkx/networkx/main/doc/images/networkx_logo.svg)
+
+<img width="557" alt="Graph Visualization" src="https://github.com/user-attachments/assets/c9534239-2e22-467b-aadf-bad4e63329a0" />
+
 
 ## 📊 Overview
 
