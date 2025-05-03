@@ -1,8 +1,11 @@
 import networkx as nx
 import random
 import matplotlib.pyplot as plt
+from typing import List, Tuple, Any, Set
 
-def random_walk_to_target_no_edge_repeats(G, source, target, max_steps=100):
+def random_walk_to_target_no_edge_repeats(
+    G: nx.Graph, source: Any, target: Any, max_steps: int = 100
+) -> Tuple[List[Any], bool]:
     """
     Perform an edge-simple random walk from source toward target on G.
     Never traverses the same edge twice. Stops when:
@@ -11,15 +14,17 @@ def random_walk_to_target_no_edge_repeats(G, source, target, max_steps=100):
       - max_steps is exceeded.
     Returns (path, reached_target: bool).
     """
+    # Initialize the walk
     current = source
     path = [source]
     visited_edges = set()  # store frozenset({u, v}) for each undirected edge used
 
-    for _ in range(max_steps):
+    for step in range(max_steps):
+        # Check if target reached
         if current == target:
             return path, True
 
-        # gather next‐step candidates via unused edges
+        # gather next-step candidates via unused edges
         candidates = []
         for nbr in G.neighbors(current):
             edge = frozenset({current, nbr})
@@ -27,34 +32,37 @@ def random_walk_to_target_no_edge_repeats(G, source, target, max_steps=100):
                 candidates.append(nbr)
 
         if not candidates:
-            # dead end reached
+            # dead end reached - no available edges
             break
 
+        # Choose random next step and mark edge as visited
         next_node = random.choice(candidates)
         visited_edges.add(frozenset({current, next_node}))
         path.append(next_node)
         current = next_node
 
+    # Return result - path and whether target was reached
     return path, (current == target)
 
 if __name__ == "__main__":
-    # 1) Build a graph of up to 12 nodes (Erdős–Rényi random graph)
+    # --- 1) Build a graph of up to 12 nodes (Erdős–Rényi random graph) ---
     n = 12
     p = 0.25  # probability of edge creation
     G = nx.erdos_renyi_graph(n, p)
     # relabel to strings "n0", "n1", ...
     G = nx.relabel_nodes(G, lambda x: f"n{x}")
 
+    # --- 2) Ensure connectivity between nodes ---
     # ensure we have at least one path between source and target
     while not nx.is_connected(G):
         G = nx.erdos_renyi_graph(n, p)
         G = nx.relabel_nodes(G, lambda x: f"n{x}")
 
-    # 2) Pick distinct source and target
+    # --- 3) Pick distinct source and target ---
     nodes = list(G.nodes())
     source, target = random.sample(nodes, 2)
 
-    # 3) Draw the graph, highlighting source (green) and target (red)
+    # --- 4) Visualize the initial graph ---
     pos = nx.spring_layout(G, seed=42)
     plt.figure(figsize=(6,6))
     nx.draw_networkx_nodes(G, pos, node_color='lightblue')
@@ -67,14 +75,14 @@ if __name__ == "__main__":
     plt.title("Random Graph with 12 Nodes")
     plt.show()
 
-    # 4) Run the edge‐simple random walk towards target
+    # --- 5) Run the edge-simple random walk towards target ---
     path, reached = random_walk_to_target_no_edge_repeats(G, source, target, max_steps=50)
     print(f"Source: {source}, Target: {target}")
     print("Reached target?", reached)
     print("Path length:", len(path))
     print("Path:", " → ".join(path))
 
-    # 5) If reached, overlay the path
+    # --- 6) Visualize the walk path if target was reached ---
     if reached:
         edge_path = list(zip(path, path[1:]))
         plt.figure(figsize=(6,6))
