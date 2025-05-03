@@ -11,7 +11,7 @@ from typing import Dict, List, Any, Optional
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Import local modules
-from code.randomwalk import random_walk, compute_hitting_time, compute_commute_time, biased_random_walk
+from code.random_walks import random_walk, compute_hitting_time, compute_commute_time, biased_random_walk
 from code.community_detection import louvain_method, spectral_clustering, label_propagation
 from code.centrality import compute_centralities, print_centrality_measures
 from code.mcl import mcl, get_clusters
