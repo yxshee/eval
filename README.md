@@ -49,26 +49,6 @@ print(f"Reached target? {reached}")
 print("Path:", " → ".join(path))
 ```
 
-### Fixed Graph Example
-
-```python
-# Create a specific graph topology
-import networkx as nx
-from random_walk.final import random_walk_to_target_no_edge_repeats
-
-G = nx.Graph()
-edges = [
-    ('A','B'), ('A','C'),
-    ('B','D'), ('C','D'),
-    ('C','E'), ('D','F'),
-    ('E','G'), ('F','H'),
-    ('G','H')
-]
-G.add_edges_from(edges)
-
-# Run algorithm with source 'A' and target 'H'
-path, reached = random_walk_to_target_no_edge_repeats(G, 'A', 'H')
-```
 
 ## ⚙️ How It Works
 
