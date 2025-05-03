@@ -1,97 +1,95 @@
-# eval
+# Social Networks Random Walk Algorithms
 
-import random
+![Graph Visualization](https://raw.githubusercontent.com/networkx/networkx/main/doc/images/networkx_logo.svg)
 
-def non_repeating_random_walk(adj_list, start):
-    """
-    Perform a random walk on the graph defined by adj_list,
-    never revisiting a node.
-    
-    adj_list: dict mapping each node to an iterable of neighbors
-    start: starting node
-    Returns: list of nodes in the order visited
-    """
-    visited = {start}
-    path = [start]
-    current = start
+## 📊 Overview
 
-    while True:
-        # Filter neighbors to those not yet visited
-        unvisited_neighbors = [n for n in adj_list.get(current, []) if n not in visited]
-        if not unvisited_neighbors:
-            break  # no more moves possible
-        # Choose one at random
-        next_node = random.choice(unvisited_neighbors)
-        visited.add(next_node)
-        path.append(next_node)
-        current = next_node
+This repository contains implementations of random walk algorithms on graphs, primarily focused on edge-simple random walks. These algorithms are useful for:
 
-    return path
+- Network exploration strategies
+- Graph traversal with constraints
+- Social network analysis
+- Measuring node importance
 
-# Example usage
-if __name__ == "__main__":
-    # Simple undirected graph
-    graph = {
-        'A': ['B', 'C'],
-        'B': ['A', 'C', 'D'],
-        'C': ['A', 'B', 'D', 'E'],
-        'D': ['B', 'C', 'E'],
-        'E': ['C', 'D']
-    }
+## 🧮 Algorithms Implemented
 
-    walk = non_repeating_random_walk(graph, start='A')
-    print("Random walk (no repeats):", walk)
+| Algorithm | Description | File |
+|-----------|-------------|------|
+| Edge-Simple Random Walk | Random walk that never traverses the same edge twice | [`randomwalk.py`](random%20walk/randomwalk.py) |
+| Target-Seeking Walk | Edge-simple random walk that attempts to reach a specified target | [`final.py`](random%20walk/final.py) |
 
+## 🖼️ Visualizations
 
+The code produces two main types of visualizations:
 
+1. **Initial Network Configuration**:  
+   Shows the complete graph with source (green) and target (red) nodes highlighted.
+
+2. **Path Visualization**:  
+   If the random walk successfully reaches the target, it displays the path taken.
+
+## 🚀 Usage
+
+### Random Graph Example
+
+```python
+# Generate a random Erdős–Rényi graph and perform a random walk
 import networkx as nx
-import random
-import matplotlib.pyplot as plt
+from random_walk.randomwalk import random_walk_to_target_no_edge_repeats
 
-# Create graph
+# Create random graph
+G = nx.erdos_renyi_graph(12, 0.25)
+source, target = "n0", "n5"
+
+# Run algorithm
+path, reached = random_walk_to_target_no_edge_repeats(G, source, target)
+print(f"Reached target? {reached}")
+print("Path:", " → ".join(path))
+```
+
+### Fixed Graph Example
+
+```python
+# Create a specific graph topology
+import networkx as nx
+from random_walk.final import random_walk_to_target_no_edge_repeats
+
 G = nx.Graph()
-edges = [('a', 'b'), ('a', 'c'), ('c', 'd'), ('d', 'e'), ('e', 'f')]
+edges = [
+    ('A','B'), ('A','C'),
+    ('B','D'), ('C','D'),
+    ('C','E'), ('D','F'),
+    ('E','G'), ('F','H'),
+    ('G','H')
+]
 G.add_edges_from(edges)
 
-# Draw graph
-nx.draw_networkx(G)
-plt.axis('off')
-plt.show()
+# Run algorithm with source 'A' and target 'H'
+path, reached = random_walk_to_target_no_edge_repeats(G, 'A', 'H')
+```
 
-def random_walk_no_edge_repeats(G, start_node, wlen):
-    """
-    Perform a random walk of up to length wlen on graph G,
-    never traversing the same edge twice.
-    """
-    current = start_node
-    walk = [start_node]
-    # For undirected graphs, represent edges as frozensets
-    visited_edges = set()
+## ⚙️ How It Works
 
-    for _ in range(wlen - 1):
-        # Collect neighbors reachable by unused edges
-        candidates = []
-        for nbr in G.neighbors(current):
-            edge = frozenset({current, nbr})
-            if edge not in visited_edges:
-                candidates.append(nbr)
+The edge-simple random walk algorithm:
 
-        if not candidates:
-            # Dead end: no unused edges left
-            break
+1. Starts at a designated source node
+2. At each step, randomly selects an unused edge
+3. Never traverses the same edge twice
+4. Terminates when:
+   - The target node is reached (success)
+   - There are no unused edges available (dead end)
+   - Maximum steps are exceeded
 
-        # Choose next node at random
-        next_node = random.choice(candidates)
-        # Mark the undirected edge as used
-        visited_edges.add(frozenset({current, next_node}))
+## 🧪 Key Features
 
-        walk.append(next_node)
-        current = next_node
+- Type annotations for better code readability
+- Visualization of both graphs and paths
+- Configurable maximum steps for walk length
+- Support for any NetworkX graph type
 
-    return walk
+## 📚 Dependencies
 
-# Example usage
-if __name__ == "__main__":
-    path = random_walk_no_edge_repeats(G, start_node='a', wlen=10)
-    print("Random walk (no edge repeats):", path)
+- NetworkX
+- Matplotlib
+- Python 3.6+
 
