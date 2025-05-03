@@ -1,77 +1,118 @@
-# Social Networks Algorithms
-
+# Social Networks Analysis
 
 <img width="557" alt="Graph Visualization" src="https://github.com/user-attachments/assets/c9534239-2e22-467b-aadf-bad4e63329a0" />
 
-
 ## 📊 Overview
 
-This repository contains implementations of random walk algorithms on graphs, primarily focused on edge-simple random walks. These algorithms are useful for:
+This repository contains implementations of various social network analysis algorithms, including random walks, centrality measures, community detection, and graph visualization techniques. These algorithms are useful for:
 
-- Network exploration strategies
-- Graph traversal with constraints
-- Social network analysis
-- Measuring node importance
+- Network exploration and navigation
+- Identifying influential nodes
+- Community structure detection
+- Information flow analysis
+- Network resilience assessment
 
 ## 🧮 Algorithms Implemented
 
-| Algorithm | Description | File |
-|-----------|-------------|------|
-| Edge-Simple Random Walk | Random walk that never traverses the same edge twice | [`randomwalk.py`](random%20walk/randomwalk.py) |
-| Target-Seeking Walk | Edge-simple random walk that attempts to reach a specified target | [`final.py`](random%20walk/final.py) |
-
-## 🖼️ Visualizations
-
-The code produces two main types of visualizations:
-
-1. **Initial Network Configuration**:  
-   Shows the complete graph with source (green) and target (red) nodes highlighted.
-
-2. **Path Visualization**:  
-   If the random walk successfully reaches the target, it displays the path taken.
+| Category | Algorithms | Files |
+|----------|------------|-------|
+| **Random Walks** | Simple Random Walks, Biased Random Walks, Edge-Simple Walks, Hitting & Commute Time | [`random_walks.py`](code/random_walks.py), [`randomwalk.py`](code/randomwalk.py) |
+| **Centrality Measures** | Degree, Closeness, Betweenness, Proximity Prestige | [`centrality.py`](code/centrality.py) |
+| **Community Detection** | MCL, Louvain, Spectral Clustering, Label Propagation | [`mcl.py`](code/mcl.py), [`community_detection.py`](code/community_detection.py) |
+| **Ranking** | PageRank | [`pagerank.py`](code/pagerank.py) |
+| **Visualization** | Graph Layouts, Community Visualization, Path Visualization | [`visualization.py`](code/visualization.py) |
+| **Utilities** | Graph Generation, Metrics, Network Properties | [`utils.py`](code/utils.py) |
 
 ## 🚀 Usage
 
-### Random Graph Example
+### Random Walks
 
 ```python
-# Generate a random Erdős–Rényi graph and perform a random walk
 import networkx as nx
-from random_walk.randomwalk import random_walk_to_target_no_edge_repeats
+from code.random_walks import random_walk, compute_hitting_time
 
-# Create random graph
-G = nx.erdos_renyi_graph(12, 0.25)
-source, target = "n0", "n5"
+# Create a simple graph
+G = nx.Graph()
+G.add_edges_from([('a','b'), ('a','c'), ('c','d'), ('d','e')])
 
-# Run algorithm
-path, reached = random_walk_to_target_no_edge_repeats(G, source, target)
-print(f"Reached target? {reached}")
-print("Path:", " → ".join(path))
+# Perform a random walk
+walk = random_walk(G, start_node='a', wlen=10)
+print(f"Random walk from 'a': {walk}")
+
+# Calculate hitting time between nodes
+hit_time = compute_hitting_time(G, 'a', 'e', simulations=100)
+print(f"Average hitting time from 'a' to 'e': {hit_time:.2f}")
 ```
 
+### Community Detection
 
-## ⚙️ How It Works
+```python
+import networkx as nx
+from code.community_detection import louvain_method
+from code.visualization import visualize_communities
 
-The edge-simple random walk algorithm:
+# Create a graph with community structure
+G = nx.karate_club_graph()
 
-1. Starts at a designated source node
-2. At each step, randomly selects an unused edge
-3. Never traverses the same edge twice
-4. Terminates when:
-   - The target node is reached (success)
-   - There are no unused edges available (dead end)
-   - Maximum steps are exceeded
+# Detect communities using Louvain method
+communities = louvain_method(G)
 
-## 🧪 Key Features
+# Visualize the communities
+visualize_communities(G, communities, title="Zachary's Karate Club Communities")
+```
 
-- Type annotations for better code readability
-- Visualization of both graphs and paths
-- Configurable maximum steps for walk length
-- Support for any NetworkX graph type
+### Centrality Measures
+
+```python
+import networkx as nx
+from code.centrality import compute_centralities, print_centrality_measures
+
+# Create a social network
+G = nx.Graph()
+G.add_edges_from([
+    ('Alice', 'Bob'), ('Alice', 'Charlie'),
+    ('Bob', 'David'), ('Charlie', 'David'),
+    ('Charlie', 'Eve'), ('David', 'Eve'),
+    ('Eve', 'Frank'), ('Frank', 'Grace')
+])
+
+# Compute centrality measures
+centralities = compute_centralities(G)
+print_centrality_measures(centralities)
+```
+
+## 🖼️ Visualization Features
+
+The repository includes multiple visualization utilities:
+
+1. **Basic Graph Visualization**:  
+   Various layouts including spring, circular, kamada-kawai, and spectral.
+
+2. **Community Visualization**:  
+   Display detected communities with distinct colors.
+
+3. **Centrality Visualization**:  
+   Represent node importance through node size and color.
+
+4. **Path Visualization**:  
+   Highlight specific paths through networks.
+
+## 📓 Jupyter Notebook
+
+The repository includes a comprehensive Jupyter notebook (`Social Network.ipynb`) that demonstrates the algorithms in action with visualizations and explanations.
+
+## ⚙️ Key Features
+
+- Type annotations for better code readability and IDE support
+- Comprehensive visualization options
+- Well-documented implementations of fundamental SNA algorithms
+- Support for various graph types (directed, undirected, weighted)
 
 ## 📚 Dependencies
 
 - NetworkX
+- NumPy
 - Matplotlib
+- Scikit-learn (for some clustering algorithms)
 - Python 3.6+
 
